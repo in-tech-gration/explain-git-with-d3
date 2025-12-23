@@ -53,4 +53,3 @@ if (!Array.prototype.indexOf) {
 //         }
 //     }
 // });
-alert();
