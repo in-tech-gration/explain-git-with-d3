@@ -85,140 +85,11 @@
       </div>
     </div>
 
-    <!-- TERMINAL & PLAYGROUND -->
-    <div class="row concept-area">
-
-      <!-- COMBINE BRANCHES -->
-      <div id="ExplainGitMerge-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git merge</span> will create a new commit with two parents. The resulting
-          commit snapshot will have the all of the work that has been done in both branches.
-        </p>
-        <p>
-          If there was no divergence between the two commits, git will do a "fast-forward" method merge.</br>
-          To see this happen, checkout the 'ff' branch and then type <span class="cmd">git merge dev</span>.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitRebase-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git rebase</span> will take the commits on this branch and "move" them so that their
-          new "base" is at the point you specify.
-        </p>
-        <p>
-          You should pay close attention to the commit IDs of the circles as they move when you do this exercise.
-        </p>
-        <p>
-          The reason I put "move" in quotations because this process actually generates brand new commits with
-          completely different IDs than the old commits, and leaves the old commits where they were. For this reason,
-          you never want to rebase commits that have already been shared with the team you are working with.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-
-      <div id="ExplainGitClean-Container" class="twelvecol concept-container">
-        <p>
-          One simple example of the use of <span class="cmd">git reset</span> is to completely restore your local
-          repository
-          state to that of the origin.</br>
-          You can do so by typing <span class="cmd">git reset origin/master</span>.
-        </p>
-        <p>
-          Note that this won't delete untracked files, you will have to delete those separately with
-          the command <span class="cmd">git clean -df</span>.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitDeleteBranches-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git branch -d</span> is used to delete branches.
-          I have pre-created a bunch of branches for you to delete in the playground below.
-          Have at it.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitFree-Container" class="twelvecol concept-container">
-        <p>
-          Do whatever you want in this free playground.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitFetchRebase-Container" class="twelvecol concept-container">
-        <p>
-          Below is a situation in which you are working in a local branch that is all your own. You want to receive the
-          latest code
-          from the origin server's master branch. To update your local branch, you can do it without having to switch
-          branches!
-        </p>
-        <p>
-          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/master</span>!
-        </p>
-        <div class="playground-container"></div>
-      </div>
-
-      <!-- REMOTE -->
-      <div id="ExplainGitFetch-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git fetch</span> will update all of the "remote tracking branches" in your local repository.
-          Remote tracking branches are tagged in grey.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitPull-Container" class="twelvecol concept-container">
-        <p>
-          A <span class="cmd">git pull</span> is a two step process that first does a <span class="cmd">git
-            fetch</span>,
-          and then does a <span class="cmd">git merge</span> of the remote tracking branch associated with your current
-          branch.
-          If you have no current branch, the process will stop after fetching.
-        </p>
-        <p>
-          If the argument "--rebase" was given by typing <span class="cmd">git pull --rebase</span>, the second step of
-          pull process will be a rebase instead of a merge. This can be set to the default behavior by configuration by
-          typing:
-          <span class="cmd">git config branch.BRANCHNAME.rebase true</span>.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitPush-Container" class="twelvecol concept-container">
-        <p>
-          A <span class="cmd">git push</span> will find the commits you have on your local branch that the corresponding
-          branch
-          on the origin server does not have, and send them to the remote repository.
-        </p>
-        <p>
-          By default, all pushes must cause a fast-forward merge on the remote repository. If there is any divergence
-          between
-          your local branch and the remote branch, your push will be rejected. In this scenario, you need to pull first
-          and then
-          you will be able to push again.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitTag-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git tag name</span> will create a new tag named "name".
-          Creating tags just creates a new tag pointing to the currently checked out commit.
-        </p>
-        <p>
-          Tags can be deleted using the command <span class="cmd">git tag -d name</span> (coming soon).
-        </p>
-        <p>
-          Type <span class="cmd">git commit</span> and <span class="cmd">git tag</span> commands
-          to your hearts desire until you understand this concept.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-
-      <!-- <div id="playground-container" class="playground-container"></div> -->
-
-    </div>
-
     <!-- EXAMPLES -->
     <div class="row">
       <div class="twelvecol">
-        <h2>Specific Examples</h2>
-        <p>Below I have created some specific real-world scenarios that I feel are quite common and useful.</p>
+        <strong>Specific Examples:</strong> Below I have created some specific real-world scenarios that I feel are
+        quite common and useful.
       </div>
     </div>
 
@@ -235,6 +106,9 @@
         <a id="open-zen" class="openswitch" href="#zen">Zen Mode</a>
       </div>
     </div>
+
+    <!-- TERMINAL & PLAYGROUND -->
+    <div class="row concept-area"></div>
 
   </div>
 

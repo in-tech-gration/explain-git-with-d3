@@ -142,14 +142,8 @@ const examples = {
     // 'switch': {}
     // TODO:
     // 'reflog': {}
-    'tag': {
-        name: 'Tag',
-        baseLine: 0.6,
-        commitData: [
-            { id: 'e137e9b', tags: ['master'] }
-        ]
-    },
 
+    // COMBINE BRANCHES:
     'merge': {
         name: 'Merge',
         height: 500,
@@ -160,7 +154,15 @@ const examples = {
             { id: 'e088135', parent: 'f5b32c8', tags: ['dev'] }
         ],
         initialMessage:
-            'Type "git merge dev".'
+            'Type "git merge dev".',
+        content: `<p>
+          <span class="cmd">git merge</span> will create a new commit with two parents. The resulting
+          commit snapshot will have the all of the work that has been done in both branches.
+        </p>
+        <p>
+          If there was no divergence between the two commits, git will do a "fast-forward" method merge.</br>
+          To see this happen, checkout the 'ff' branch and then type <span class="cmd">git merge dev</span>.
+        </p>`
     },
     'rebase': {
         name: 'Rebase',
@@ -173,8 +175,23 @@ const examples = {
         ],
         currentBranch: 'dev',
         initialMessage:
-            'Type "git rebase master".'
+            'Type "git rebase master".',
+        content: `<p>
+          <span class="cmd">git rebase</span> will take the commits on this branch and "move" them so that their
+          new "base" is at the point you specify.
+        </p>
+        <p>
+          You should pay close attention to the commit IDs of the circles as they move when you do this exercise.
+        </p>
+        <p>
+          The reason I put "move" in quotations because this process actually generates brand new commits with
+          completely different IDs than the old commits, and leaves the old commits where they were. For this reason,
+          you never want to rebase commits that have already been shared with the team you are working with.
+        </p>
+`
     },
+
+    // REMOTE:
     'fetch': {
         name: 'Fetch',
         height: 500,
@@ -196,7 +213,11 @@ const examples = {
         ],
         initialMessage:
             'Carefully compare the commit IDs between the origin and the local repository. ' +
-            'Then type "git fetch".'
+            'Then type "git fetch".',
+        content: `<p>
+          <span class="cmd">git fetch</span> will update all of the "remote tracking branches" in your local repository.
+          Remote tracking branches are tagged in grey.
+        </p>`
     },
     'pull': {
         name: 'Pull',
@@ -213,7 +234,20 @@ const examples = {
         ],
         initialMessage:
             'Carefully compare the commit IDs between the origin and the local repository. ' +
-            'Then type "git pull".'
+            'Then type "git pull".',
+        content: `<p>
+          A <span class="cmd">git pull</span> is a two step process that first does a <span class="cmd">git
+            fetch</span>,
+          and then does a <span class="cmd">git merge</span> of the remote tracking branch associated with your current
+          branch.
+          If you have no current branch, the process will stop after fetching.
+        </p>
+        <p>
+          If the argument "--rebase" was given by typing <span class="cmd">git pull --rebase</span>, the second step of
+          pull process will be a rebase instead of a merge. This can be set to the default behavior by configuration by
+          typing:
+          <span class="cmd">git config branch.BRANCHNAME.rebase true</span>.
+        </p>`
     },
     'push': {
         name: 'Push',
@@ -228,8 +262,40 @@ const examples = {
         ],
         initialMessage:
             'Carefully compare the commit IDs between the origin and the local repository. ' +
-            'Then type "git push".'
+            'Then type "git push".',
+        content: `<p>
+          A <span class="cmd">git push</span> will find the commits you have on your local branch that the corresponding
+          branch
+          on the origin server does not have, and send them to the remote repository.
+        </p>
+        <p>
+          By default, all pushes must cause a fast-forward merge on the remote repository. If there is any divergence
+          between
+          your local branch and the remote branch, your push will be rejected. In this scenario, you need to pull first
+          and then
+          you will be able to push again.
+        </p>`
     },
+    'tag': {
+        name: 'Tag',
+        baseLine: 0.6,
+        commitData: [
+            { id: 'e137e9b', tags: ['master'] }
+        ],
+        content: `<p>
+          <span class="cmd">git tag name</span> will create a new tag named "name".
+          Creating tags just creates a new tag pointing to the currently checked out commit.
+        </p>
+        <p>
+          Tags can be deleted using the command <span class="cmd">git tag -d name</span> (coming soon).
+        </p>
+        <p>
+          Type <span class="cmd">git commit</span> and <span class="cmd">git tag</span> commands
+          to your hearts desire until you understand this concept.
+        </p>`
+    },
+
+    // MISC:
     'clean': {
         name: 'Clean',
         height: 200,
@@ -239,7 +305,18 @@ const examples = {
             { id: '0e70093', parent: 'e137e9b' },
             { id: '3e33afd', parent: '0e70093', tags: ['master'] }
         ],
-        initialMessage: 'Type "git reset origin/master".'
+        initialMessage: 'Type "git reset origin/master".',
+        content: `<p>
+          One simple example of the use of <span class="cmd">git reset</span> is to completely restore your local
+          repository
+          state to that of the origin.</br>
+          You can do so by typing <span class="cmd">git reset origin/master</span>.
+        </p>
+        <p>
+          Note that this won't delete untracked files, you will have to delete those separately with
+          the command <span class="cmd">git clean -df</span>.
+        </p>
+`
     },
     'fetchrebase': {
         name: 'FetchRebase',
@@ -257,7 +334,16 @@ const examples = {
             { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] }
         ],
         initialMessage:
-            'First type "git fetch". Then type "git rebase origin/master".'
+            'First type "git fetch". Then type "git rebase origin/master".',
+        content: `<p>
+          Below is a situation in which you are working in a local branch that is all your own. You want to receive the
+          latest code
+          from the origin server's master branch. To update your local branch, you can do it without having to switch
+          branches!
+        </p>
+        <p>
+          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/master</span>!
+        </p>`
     },
     'deletebranches': {
         name: 'DeleteBranches',
@@ -275,7 +361,12 @@ const examples = {
         ],
         currentBranch: 'terran',
         initialMessage:
-            'Delete some branches.'
+            'Delete some branches.',
+        content: `<p>
+          <span class="cmd">git branch -d</span> is used to delete branches.
+          I have pre-created a bunch of branches for you to delete in the playground below.
+          Have at it.
+        </p>`
     },
     'freeplay': {
         name: 'Free',
@@ -290,8 +381,12 @@ const examples = {
             { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] }
         ],
         initialMessage:
-            'Have fun.'
+            'Have fun.',
+        content: `<p>
+          Do whatever you want in this free playground.
+        </p>`
     }
+
 };
 
 window.addEventListener('hashchange', open, false);
