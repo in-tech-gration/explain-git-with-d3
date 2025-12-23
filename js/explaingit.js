@@ -1,74 +1,74 @@
-define(['historyview', 'controlbox', 'd3'], function (HistoryView, ControlBox, d3) {
-    var prefix = 'ExplainGit',
-        openSandBoxes = [],
-        open,
-        reset,
-        explainGit;
+// define(['historyview', 'controlbox', 'd3'], function (HistoryView, ControlBox, d3) { /* MOVED OUTSIDE */});
 
-    open = function (_args) {
-        var args = Object.create(_args),
-            name = prefix + args.name,
-            containerId = name + '-Container',
-            container = d3.select('#' + containerId),
-            playground = container.select('.playground-container'),
-            historyView, originView = null,
-            controlBox;
+var prefix = 'ExplainGit',
+    openSandBoxes = [],
+    open,
+    reset,
+    explainGit;
 
-        container.style('display', 'block');
+open = function (_args) {
+    var args = Object.create(_args),
+        name = prefix + args.name,
+        containerId = name + '-Container',
+        container = d3.select('#' + containerId),
+        playground = container.select('.playground-container'),
+        historyView, originView = null,
+        controlBox;
 
-        args.name = name;
-        historyView = new HistoryView(args);
+    container.style('display', 'block');
 
-        if (args.originData) {
-            originView = new HistoryView({
-                name: name + '-Origin',
-                width: 300,
-                height: 225,
-                commitRadius: 15,
-                remoteName: 'origin',
-                commitData: args.originData
-            });
+    args.name = name;
+    historyView = new HistoryView(args);
 
-            originView.render(playground);
-        }
-
-        controlBox = new ControlBox({
-            historyView: historyView,
-            originView: originView,
-            initialMessage: args.initialMessage
+    if (args.originData) {
+        originView = new HistoryView({
+            name: name + '-Origin',
+            width: 300,
+            height: 225,
+            commitRadius: 15,
+            remoteName: 'origin',
+            commitData: args.originData
         });
 
-        controlBox.render(playground);
-        historyView.render(playground);
+        originView.render(playground);
+    }
 
-        openSandBoxes.push({
-            hv: historyView,
-            cb: controlBox,
-            container: container
-        });
-    };
+    controlBox = new ControlBox({
+        historyView: historyView,
+        originView: originView,
+        initialMessage: args.initialMessage
+    });
 
-    reset = function () {
-        for (var i = 0; i < openSandBoxes.length; i++) {
-            var osb = openSandBoxes[i];
-            osb.hv.destroy();
-            osb.cb.destroy();
-            osb.container.style('display', 'none');
-        }
+    controlBox.render(playground);
+    historyView.render(playground);
 
-        openSandBoxes.length = 0;
-        d3.selectAll('a.openswitch').classed('selected', false);
-    };
+    openSandBoxes.push({
+        hv: historyView,
+        cb: controlBox,
+        container: container
+    });
+};
 
-    explainGit = {
-        HistoryView: HistoryView,
-        ControlBox: ControlBox,
-        generateId: HistoryView.generateId,
-        open: open,
-        reset: reset
-    };
+reset = function () {
+    for (var i = 0; i < openSandBoxes.length; i++) {
+        var osb = openSandBoxes[i];
+        osb.hv.destroy();
+        osb.cb.destroy();
+        osb.container.style('display', 'none');
+    }
 
-    window.explainGit = explainGit;
+    openSandBoxes.length = 0;
+    d3.selectAll('a.openswitch').classed('selected', false);
+};
 
-    return explainGit;
-});
+explainGit = {
+    HistoryView: HistoryView,
+    ControlBox: ControlBox,
+    generateId: HistoryView.generateId,
+    open: open,
+    reset: reset
+};
+
+window.explainGit = explainGit;
+
+// return explainGit;
