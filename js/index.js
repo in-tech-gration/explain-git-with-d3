@@ -17,6 +17,10 @@ const examples = {
             { id: 'e137e9b', tags: ['master'] }
         ]
     },
+    // TODO: 
+    // 'switch': {}
+    // TODO:
+    // 'reflog': {}
     'tag': {
         name: 'Tag',
         baseLine: 0.6,
