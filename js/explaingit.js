@@ -56,6 +56,7 @@ var open = function (_args) {
 
     const xterm = new XTermControlBox({
         historyView,
+        originView,
         initialMessage: args.initialMessage,
     });
     xterm.render();

@@ -2,7 +2,9 @@
 
 function XTermControlBox(config) {
     this.historyView = config.historyView;
+    this.originView = config.originView;
     this.initialMessage = config.initialMessage || 'Enter git commands below.';
+    this.rebaseConfig = {};
     this.term = new Terminal();
 }
 
@@ -16,7 +18,10 @@ XTermControlBox.prototype = {
 
         this.term.open(terminal);
         // this.term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
-        this.term.write(`$ ${this.initialMessage}`);
+        if (this.initialMessage) {
+            this.term.write(`\x1B[90m${this.initialMessage}\x1B[0m\r\n\r\n`);
+        }
+        this.term.write(`$ `);
         // Let the user type commands in the xterm terminal and also delete characters with backspace.
         // Stop the user from deleting the $ prompt. Make sure to support newlines too.
         this.term.onKey(e => {
@@ -46,6 +51,15 @@ XTermControlBox.prototype = {
         this.term.write(`$ `);
     },
 
+    error: function (msg) {
+        msg = msg || 'I don\'t understand that.';
+        // Display msg in red color in the term:
+        this.term.write(`\x1B[91m\r\n${msg}\x1B[0m`);
+        this.term.write('\r\n$ ');
+        // this.log.append('div').classed('error', true).html(msg);
+        // this._scrollToBottom();
+    },
+
     command: function (entry) {
         console.log("XTerm command()", entry);
 
@@ -66,8 +80,9 @@ XTermControlBox.prototype = {
         var args = split.slice(2);
 
         try {
-            if (typeof this[method] === 'function') {
-                this[method](args);
+            if (typeof this["git_" + method] === 'function') {
+                this["git_" + method](args);
+                // this.term.write('\r\n$ ');
             } else {
                 // this.error();
                 this.term.write('\r\n$ ');
@@ -79,7 +94,7 @@ XTermControlBox.prototype = {
 
     },
 
-    commit: function (args) {
+    git_commit: function (args) {
 
         this.term.write(`\x1B[90m\r\n[commit]\x1B[0m`);
         this.term.write('\r\n$ ');
@@ -99,7 +114,141 @@ XTermControlBox.prototype = {
         } else {
             this.historyView.commit();
         }
-    }
+    },
+
+    git_fetch: function () {
+
+        if (!this.originView) {
+            throw new Error('There is no remote server to fetch from.');
+        }
+
+        var origin = this.originView,
+            local = this.historyView,
+            remotePattern = /^origin\/([^\/]+)$/,
+            rtb, isRTB, fb,
+            fetchBranches = {},
+            fetchIds = [], // just to make sure we don't fetch the same commit twice
+            fetchCommits = [], fetchCommit,
+            resultMessage = '';
+
+        // determine which branches to fetch
+        for (rtb = 0; rtb < local.branches.length; rtb++) {
+            isRTB = remotePattern.exec(local.branches[rtb]);
+            if (isRTB) {
+                fetchBranches[isRTB[1]] = 0;
+            }
+        }
+
+        // determine which commits the local repo is missing from the origin
+        for (fb in fetchBranches) {
+            if (origin.branches.indexOf(fb) > -1) {
+                fetchCommit = origin.getCommit(fb);
+
+                var notInLocal = local.getCommit(fetchCommit.id) === null;
+                while (notInLocal) {
+                    if (fetchIds.indexOf(fetchCommit.id) === -1) {
+                        fetchCommits.unshift(fetchCommit);
+                        fetchIds.unshift(fetchCommit.id);
+                    }
+                    fetchBranches[fb] += 1;
+                    fetchCommit = origin.getCommit(fetchCommit.parent);
+                    notInLocal = local.getCommit(fetchCommit.id) === null;
+                }
+            }
+        }
+
+        // add the fetched commits to the local commit data
+        for (var fc = 0; fc < fetchCommits.length; fc++) {
+            fetchCommit = fetchCommits[fc];
+            local.commitData.push({
+                id: fetchCommit.id,
+                parent: fetchCommit.parent,
+                tags: []
+            });
+        }
+
+        // update the remote tracking branch tag locations
+        for (fb in fetchBranches) {
+            if (origin.branches.indexOf(fb) > -1) {
+                var remoteLoc = origin.getCommit(fb).id;
+                local.moveTag('origin/' + fb, remoteLoc);
+            }
+
+            resultMessage += 'Fetched ' + fetchBranches[fb] + ' commits on ' + fb + '.</br>';
+        }
+
+        this.info(resultMessage);
+
+        local.renderCommits();
+    },
+
+    git_checkout: function (args) {
+        while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case '-b':
+                    var name = args[args.length - 1];
+                    try {
+                        this.historyView.branch(name);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        }
+                    }
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.historyView.checkout(remainingArgs.join(' '));
+            }
+
+            this.term.write('\r\n$ ');
+        }
+    },
+
+    git_pull: function (args) {
+
+        var control = this;
+        var local = this.historyView;
+        var currentBranch = local.currentBranch;
+        var rtBranch = 'origin/' + currentBranch;
+        var isFastForward = false;
+
+        this.git_fetch();
+
+        if (!currentBranch) {
+            throw new Error('You are not currently on a branch.');
+        }
+
+        if (local.branches.indexOf(rtBranch) === -1) {
+            throw new Error('Current branch is not set up for pulling.');
+        }
+
+        setTimeout(function () {
+            try {
+                if (args[0] === '--rebase' || control.rebaseConfig[currentBranch] === 'true') {
+                    isFastForward = local.rebase(rtBranch) === 'Fast-Forward';
+                } else {
+                    isFastForward = local.merge(rtBranch) === 'Fast-Forward';
+                }
+            } catch (error) {
+                control.error(error.message);
+            }
+
+            if (isFastForward) {
+                control.info('Fast-forwarded to ' + rtBranch + '.');
+            }
+        }, 750);
+    },
+
+    info: function (msg) {
+        // console.log(msg);
+        this.term.write(`\x1B[90m\r\n${msg}\x1B[0m`);
+        this.term.write('\r\n$ ');
+        // this.log.append('div').classed('info', true).html(msg);
+        // this._scrollToBottom();
+    },
 }
 
 
@@ -118,6 +267,8 @@ function ControlBox(config) {
 }
 
 ControlBox.prototype = {
+
+    // ✅
     render: function (container) {
 
         var cBox = this;
@@ -243,12 +394,14 @@ ControlBox.prototype = {
         this._scrollToBottom();
     },
 
+    // ✅
     error: function (msg) {
         msg = msg || 'I don\'t understand that.';
         this.log.append('div').classed('error', true).html(msg);
         this._scrollToBottom();
     },
 
+    // ✅
     commit: function (args) {
         if (args.length >= 2) {
             var arg = args.shift();
@@ -349,6 +502,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     checkout: function (args) {
         while (args.length > 0) {
             var arg = args.shift();
@@ -478,6 +632,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     fetch: function () {
         if (!this.originView) {
             throw new Error('There is no remote server to fetch from.');
@@ -543,6 +698,7 @@ ControlBox.prototype = {
         local.renderCommits();
     },
 
+    // 🚧
     pull: function (args) {
         var control = this,
             local = this.historyView,
