@@ -7,13 +7,15 @@ var prefix = 'ExplainGit',
     explainGit;
 
 open = function (_args) {
-    var args = Object.create(_args),
-        name = prefix + args.name,
-        containerId = name + '-Container',
-        container = d3.select('#' + containerId),
-        playground = container.select('.playground-container'),
-        historyView, originView = null,
-        controlBox;
+
+    let args = Object.create(_args);
+    let name = prefix + args.name;
+    let containerId = name + '-Container';
+    let container = d3.select('#' + containerId);
+    let playground = container.select('.playground-container');
+    // let playground = d3.select('#playground-container'),
+    let historyView, originView = null;
+    let controlBox;
 
     container.style('display', 'block');
 

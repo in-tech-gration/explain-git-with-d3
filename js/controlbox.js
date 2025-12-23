@@ -278,16 +278,28 @@ ControlBox.prototype = {
             return;
         }
 
-        while (args.length > 0) {
+        arg_loop: while (args.length > 0) {
+            console.log(1, { args });
             var arg = args.shift();
+            console.log(2, { arg });
 
-            try {
-                this.historyView.tag(arg);
-            } catch (err) {
-                if (err.message.indexOf('already exists') === -1) {
-                    throw new Error(err.message);
-                }
+            switch (arg) {
+                case "-d":
+                    const name = args[args.length - 1];
+                    this.info(`git tag -d ${name} coming soon...`);
+                    break arg_loop;
+
+                default:
+                    try {
+                        this.historyView.tag(arg);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        }
+                    }
+                    break;
             }
+
         }
     },
 
