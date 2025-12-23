@@ -228,6 +228,8 @@ function open() {
 
     if (example) {
 
+        console.log({ example, hash, linkId });
+        
         explainGit.reset();
         document.getElementById(linkId).classList.add('selected');
         explainGit.open(example);

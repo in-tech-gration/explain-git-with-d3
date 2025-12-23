@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="css/explaingit.css">
   <!-- XTerm -->
   <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
-  <!-- <script src="node_modules/@xterm/xterm/lib/xterm.js" type="module"></script> -->
+  <script src="node_modules/@xterm/xterm/lib/xterm.js" type="module"></script>
 </head>
 
 <body>
@@ -84,6 +84,8 @@
 
     <!-- TERMINAL & PLAYGROUND -->
     <div class="row concept-area">
+
+      <!-- BASIC COMMANDS -->
       <div id="ExplainGitCommit-Container" class="twelvecol concept-container">
         <p>
           We are going to skip instructing you on how to add your files for commit in this explanation.
@@ -92,20 +94,6 @@
         <p>
           Pretend that you already have your files staged for commit and enter <span class="cmd">git commit</span>
           as many times as you like in the terminal box.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitTag-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git tag name</span> will create a new tag named "name".
-          Creating tags just creates a new tag pointing to the currently checked out commit.
-        </p>
-        <p>
-          Tags can be deleted using the command <span class="cmd">git tag -d name</span> (coming soon).
-        </p>
-        <p>
-          Type <span class="cmd">git commit</span> and <span class="cmd">git tag</span> commands
-          to your hearts desire until you understand this concept.
         </p>
         <div class="playground-container"></div>
       </div>
@@ -151,6 +139,8 @@
         </p>
         <div class="playground-container"></div>
       </div>
+
+      <!-- UNDO COMMITS -->
       <div id="ExplainGitReset-Container" class="twelvecol concept-container">
         <p>
           <span class="cmd">git reset</span> will move HEAD and the current branch back to wherever
@@ -187,6 +177,8 @@
         </p>
         <div class="playground-container"></div>
       </div>
+
+      <!-- COMBINE BRANCHES -->
       <div id="ExplainGitMerge-Container" class="twelvecol concept-container">
         <p>
           <span class="cmd">git merge</span> will create a new commit with two parents. The resulting
@@ -213,6 +205,48 @@
         </p>
         <div class="playground-container"></div>
       </div>
+
+      <div id="ExplainGitClean-Container" class="twelvecol concept-container">
+        <p>
+          One simple example of the use of <span class="cmd">git reset</span> is to completely restore your local
+          repository
+          state to that of the origin.</br>
+          You can do so by typing <span class="cmd">git reset origin/master</span>.
+        </p>
+        <p>
+          Note that this won't delete untracked files, you will have to delete those separately with
+          the command <span class="cmd">git clean -df</span>.
+        </p>
+        <div class="playground-container"></div>
+      </div>
+      <div id="ExplainGitDeleteBranches-Container" class="twelvecol concept-container">
+        <p>
+          <span class="cmd">git branch -d</span> is used to delete branches.
+          I have pre-created a bunch of branches for you to delete in the playground below.
+          Have at it.
+        </p>
+        <div class="playground-container"></div>
+      </div>
+      <div id="ExplainGitFree-Container" class="twelvecol concept-container">
+        <p>
+          Do whatever you want in this free playground.
+        </p>
+        <div class="playground-container"></div>
+      </div>
+      <div id="ExplainGitFetchRebase-Container" class="twelvecol concept-container">
+        <p>
+          Below is a situation in which you are working in a local branch that is all your own. You want to receive the
+          latest code
+          from the origin server's master branch. To update your local branch, you can do it without having to switch
+          branches!
+        </p>
+        <p>
+          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/master</span>!
+        </p>
+        <div class="playground-container"></div>
+      </div>
+
+      <!-- REMOTE -->
       <div id="ExplainGitFetch-Container" class="twelvecol concept-container">
         <p>
           <span class="cmd">git fetch</span> will update all of the "remote tracking branches" in your local repository.
@@ -251,45 +285,21 @@
         </p>
         <div class="playground-container"></div>
       </div>
-      <div id="ExplainGitClean-Container" class="twelvecol concept-container">
+      <div id="ExplainGitTag-Container" class="twelvecol concept-container">
         <p>
-          One simple example of the use of <span class="cmd">git reset</span> is to completely restore your local
-          repository
-          state to that of the origin.</br>
-          You can do so by typing <span class="cmd">git reset origin/master</span>.
+          <span class="cmd">git tag name</span> will create a new tag named "name".
+          Creating tags just creates a new tag pointing to the currently checked out commit.
         </p>
         <p>
-          Note that this won't delete untracked files, you will have to delete those separately with
-          the command <span class="cmd">git clean -df</span>.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitFetchRebase-Container" class="twelvecol concept-container">
-        <p>
-          Below is a situation in which you are working in a local branch that is all your own. You want to receive the
-          latest code
-          from the origin server's master branch. To update your local branch, you can do it without having to switch
-          branches!
+          Tags can be deleted using the command <span class="cmd">git tag -d name</span> (coming soon).
         </p>
         <p>
-          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/master</span>!
+          Type <span class="cmd">git commit</span> and <span class="cmd">git tag</span> commands
+          to your hearts desire until you understand this concept.
         </p>
         <div class="playground-container"></div>
       </div>
-      <div id="ExplainGitDeleteBranches-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git branch -d</span> is used to delete branches.
-          I have pre-created a bunch of branches for you to delete in the playground below.
-          Have at it.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitFree-Container" class="twelvecol concept-container">
-        <p>
-          Do whatever you want in this free playground.
-        </p>
-        <div class="playground-container"></div>
-      </div>
+
     </div>
 
     <!-- EXAMPLES -->

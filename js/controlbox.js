@@ -207,6 +207,12 @@ ControlBox.prototype = {
         }
     },
 
+    /**
+     * 
+     * @param {*} args 
+     * @description: https://git-scm.com/docs/git-switch
+     * @returns 
+     */
     switch: function (args) {
 
         if (args.length < 1) {
