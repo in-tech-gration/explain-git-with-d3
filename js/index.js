@@ -1,5 +1,3 @@
-// require(['explaingit'], function (explainGit) { /* MOVED OUTSIDE */});
-
 const examples = {
 
     // BASIC COMMANDS:
@@ -12,10 +10,7 @@ const examples = {
         ],
         initialMessage: 'Type git commit a few times.',
         content: `<p>
-        We are going to skip instructing you on how to add your files for commit in this explanation. Let's assume you already know how to do that. If you don't, go read some other tutorials.
-        </p>
-        <p>
-        Pretend that you already have your files staged for commit and enter git commit as many times as you like in the terminal box.</p>`
+        We are going to skip instructing you on how to add your files for commit in this explanation. Let's assume you already know how to do that. If you don't, go read some other tutorials. Pretend that you already have your files staged for commit and enter git commit as many times as you like in the terminal box.</p>`
     },
     'branch': {
         name: 'Branch',
@@ -392,11 +387,6 @@ const examples = {
 window.addEventListener('hashchange', open, false);
 window.addEventListener('load', open, false);
 
-const term = new Terminal();
-term.open(document.getElementById('terminal'));
-// term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
-term.write('$ ')
-
 function open() {
 
     let hash = window.location.hash.substr(1),
@@ -405,7 +395,7 @@ function open() {
 
     if (example) {
 
-        console.log({ example, hash, linkId });
+        // console.log({ example, hash, linkId });
 
         explainGit.reset();
         document.getElementById(linkId).classList.add('selected');

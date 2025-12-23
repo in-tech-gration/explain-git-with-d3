@@ -1,5 +1,3 @@
-// define(['historyview', 'controlbox', 'd3'], function (HistoryView, ControlBox, d3) { /* MOVED OUTSIDE */});
-
 var prefix = 'ExplainGit';
 var openSandBoxes = [];
 var explainGit;
@@ -29,7 +27,6 @@ var open = function (_args) {
     let playground = container.select('.playground-container');
     // let playground = d3.select('#playground-container'),
     let historyView, originView = null;
-    let controlBox;
 
     container.style('display', 'block');
 
@@ -49,19 +46,26 @@ var open = function (_args) {
         originView.render(playground);
     }
 
-    controlBox = new ControlBox({
-        historyView: historyView,
-        originView: originView,
+    let controlBox = new ControlBox({
+        historyView,
+        originView,
         initialMessage: args.initialMessage
     });
 
     controlBox.render(playground);
+
+    const xterm = new XTermControlBox({
+        historyView,
+        initialMessage: args.initialMessage,
+    });
+    xterm.render();
+
     historyView.render(playground);
 
     openSandBoxes.push({
         hv: historyView,
         cb: controlBox,
-        container: container
+        container
     });
 };
 

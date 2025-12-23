@@ -1,5 +1,3 @@
-// define(['d3'], function () { /* MOVED OUTSIDE... */});
-
 "use strict";
 
 var REG_MARKER_END = 'url(#triangle)',

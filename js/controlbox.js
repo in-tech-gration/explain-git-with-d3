@@ -1,6 +1,107 @@
-// define(['d3'], function () { /* MOVED OUTSIDE */});
-
 "use strict";
+
+function XTermControlBox(config) {
+    this.historyView = config.historyView;
+    this.initialMessage = config.initialMessage || 'Enter git commands below.';
+    this.term = new Terminal();
+}
+
+XTermControlBox.prototype = {
+
+    render: function (container) {
+
+        const terminal = document.getElementById('terminal');
+        // TODO: Clear previous terminal along with its listeners.
+        terminal.innerHTML = '';
+
+        this.term.open(terminal);
+        // this.term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+        this.term.write(`$ ${this.initialMessage}`);
+        // Let the user type commands in the xterm terminal and also delete characters with backspace.
+        // Stop the user from deleting the $ prompt. Make sure to support newlines too.
+        this.term.onKey(e => {
+
+            const char = e.key;
+            const code = e.domEvent.keyCode;
+            const promptLength = 2; // Length of the prompt "$ "
+
+            if (code === 13) { // Enter
+                const buffer = this.term.buffer.active.getLine(this.term.buffer.active.cursorY).translateToString(true).slice(promptLength);
+                this.command(buffer);
+                // this.term.write('\r\n$ ');
+            } else if (code === 8) { // Backspace
+                if (this.term._core.buffer.x > promptLength) {
+                    this.term.write('\b \b');
+                }
+            } else {
+                this.term.write(char);
+            }
+        });
+
+    },
+
+    clear: function () {
+        // console.log(this.term.buffer);
+        this.term.reset();
+        this.term.write(`$ `);
+    },
+
+    command: function (entry) {
+        console.log("XTerm command()", entry);
+
+        if (entry.trim === '') {
+            return;
+        }
+
+        var split = entry.split(' ');
+
+        if (split[0] !== 'git') {
+            // Error: not a git command
+            this.term.write('\x1B[90m\r\nOps!\x1B[0m');
+            this.term.write('\r\n$ ');
+            return;
+        }
+
+        var method = split[1];
+        var args = split.slice(2);
+
+        try {
+            if (typeof this[method] === 'function') {
+                this[method](args);
+            } else {
+                // this.error();
+                this.term.write('\r\n$ ');
+            }
+        } catch (ex) {
+            var msg = (ex && ex.message) ? ex.message : null;
+            this.error(msg);
+        }
+
+    },
+
+    commit: function (args) {
+
+        this.term.write(`\x1B[90m\r\n[commit]\x1B[0m`);
+        this.term.write('\r\n$ ');
+
+        if (args.length >= 2) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case '-m':
+                    var message = args.join(" ");
+                    this.historyView.commit({}, message);
+                    break;
+                default:
+                    this.historyView.commit();
+                    break;
+            }
+        } else {
+            this.historyView.commit();
+        }
+    }
+}
+
 
 /**
  * @class ControlBox
@@ -18,12 +119,14 @@ function ControlBox(config) {
 
 ControlBox.prototype = {
     render: function (container) {
-        var cBox = this,
-            cBoxContainer, log, input;
+
+        var cBox = this;
+        var cBoxContainer;
+        var log;
+        var input;
 
         cBoxContainer = container.append('div')
             .classed('control-box', true);
-
 
         log = cBoxContainer.append('div')
             .classed('log', true);
@@ -102,6 +205,8 @@ ControlBox.prototype = {
     },
 
     command: function (entry) {
+        console.log("command()", entry);
+
         if (entry.trim === '') {
             return;
         }
@@ -118,8 +223,8 @@ ControlBox.prototype = {
             return this.error();
         }
 
-        var method = split[1],
-            args = split.slice(2);
+        var method = split[1];
+        var args = split.slice(2);
 
         try {
             if (typeof this[method] === 'function') {
@@ -566,5 +671,5 @@ ControlBox.prototype = {
     }
 };
 
-// return ControlBox;
 window.ControlBox = ControlBox;
+window.XTermControlBox = XTermControlBox;
