@@ -207,6 +207,37 @@ ControlBox.prototype = {
         }
     },
 
+    switch: function (args) {
+
+        if (args.length < 1) {
+            this.info('fatal: missing branch or commit argument');
+            return;
+        }
+        while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+            case '-c':
+                var name = args[args.length - 1];
+                try {
+                    this.historyView.branch(name);
+                    this.historyView.checkout(name);
+                } catch (err) {
+                    if (err.message.indexOf('already exists') === -1) {
+                        throw new Error(err.message);
+                    } else {
+                        this.historyView.checkout(name);
+                    }
+                }
+                break;
+            default:
+                var remainingArgs = [arg].concat(args);
+                args.length = 0;
+                this.historyView.checkout(remainingArgs.join(' '));
+            }
+        }
+    },
+
     checkout: function (args) {
         while (args.length > 0) {
             var arg = args.shift();

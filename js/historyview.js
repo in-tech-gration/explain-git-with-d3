@@ -294,14 +294,14 @@ HistoryView.prototype = {
                 break;
             }
 
-            var matchedTag = function() { 
+            var matchedTag = function () {
                 for (var j = 0; j < commit.tags.length; j++) {
                     var tag = commit.tags[j];
                     if (tag === ref) {
                         matchedCommit = commit;
                         return true;
                     }
-                    
+
                     if (tag.indexOf('[') === 0 && tag.indexOf(']') === tag.length - 1) {
                         tag = tag.substring(1, tag.length - 1);
                     }
@@ -361,7 +361,7 @@ HistoryView.prototype = {
         svgContainer = container.append('div')
             .classed('svg-container', true)
             .classed('remote-container', this.isRemote);
-            
+
         svg = svgContainer.append('svg:svg');
 
         svg.attr('id', this.name)
@@ -418,8 +418,8 @@ HistoryView.prototype = {
             preventOverlap(commit, this);
         }
     },
-    
-    _resizeSvg: function() {
+
+    _resizeSvg: function () {
         var ele = document.getElementById(this.svg.node().id);
         var container = ele.parentNode;
         var currentWidth = ele.offsetWidth;
@@ -519,7 +519,7 @@ HistoryView.prototype = {
             .classed('commit-pointer', true)
             .call(fixPointerStartPosition, view)
             .attr('x2', function () { return d3.select(this).attr('x1'); })
-            .attr('y2', function () {  return d3.select(this).attr('y1'); })
+            .attr('y2', function () { return d3.select(this).attr('y1'); })
             .attr('marker-end', REG_MARKER_END)
             .transition()
             .duration(500)
@@ -583,7 +583,7 @@ HistoryView.prototype = {
         this._renderText('message-label', function (d) { return d.message; }, 24);
     },
 
-    _renderText: function(className, getText, delta) {
+    _renderText: function (className, getText, delta) {
         var view = this,
             existingTexts,
             newtexts;
@@ -616,14 +616,14 @@ HistoryView.prototype = {
                     this.branches.push(tagName);
                 }
 
-                tagData.push({name: tagName, commit: c.id});
+                tagData.push({ name: tagName, commit: c.id });
             }
         }
 
         if (!headCommit) {
             headCommit = this.getCommit(this.currentBranch);
             headCommit.tags.push('HEAD');
-            tagData.push({name: 'HEAD', commit: headCommit.id});
+            tagData.push({ name: 'HEAD', commit: headCommit.id });
         }
 
         // find out which commits are not branchless
@@ -727,8 +727,8 @@ HistoryView.prototype = {
         newTags.append('svg:text')
             .text(function (d) {
                 if (d.name.indexOf('[') === 0 && d.name.indexOf(']') === d.name.length - 1)
-                    return d.name.substring(1, d.name.length - 1); 
-                return d.name; 
+                    return d.name.substring(1, d.name.length - 1);
+                return d.name;
             })
             .attr('y', function (d) {
                 return tagY(d, view) + 14;
@@ -831,6 +831,10 @@ HistoryView.prototype = {
         this.checkout(this.currentBranch);
         return this;
     },
+
+    // switch: function (name) {
+    //     console.log("switch()", { name });
+    // },
 
     branch: function (name) {
         if (!name || name.trim() === '') {
@@ -936,7 +940,7 @@ HistoryView.prototype = {
 
         if (this.isAncestor(commit, 'HEAD')) {
             commit.reverted = true;
-            this.commit({reverts: commit.id});
+            this.commit({ reverts: commit.id });
         } else {
             throw new Error(ref + 'is not an ancestor of HEAD.');
         }
@@ -970,15 +974,15 @@ HistoryView.prototype = {
             while (branchStartCommit.parent !== currentCommit.id) {
                 branchStartCommit = this.getCommit(branchStartCommit.parent);
             }
-            
+
             branchStartCommit.isNoFFBranch = true;
-            
-            this.commit({parent2: mergeTarget.id, isNoFFCommit: true});
+
+            this.commit({ parent2: mergeTarget.id, isNoFFCommit: true });
         } else if (this.isAncestor(currentCommit, mergeTarget)) {
             this.fastForward(mergeTarget);
             return 'Fast-Forward';
         } else {
-            this.commit({parent2: mergeTarget.id});
+            this.commit({ parent2: mergeTarget.id });
         }
     },
 
