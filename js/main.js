@@ -1,17 +1,17 @@
 ﻿if (!String.prototype.trim) {
     String.prototype.trim = function () {
-      return this.replace(/^\s+|\s+$/g,'');
+        return this.replace(/^\s+|\s+$/g, '');
     };
 }
 
 if (!Array.isArray) {
     Array.isArray = function (vArg) {
-      return Object.prototype.toString.call(vArg) === "[object Array]";
+        return Object.prototype.toString.call(vArg) === "[object Array]";
     };
 }
 
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
         "use strict";
         if (this == null) {
             throw new TypeError();

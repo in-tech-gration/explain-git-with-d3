@@ -36,44 +36,44 @@ ControlBox.prototype = {
             var e = d3.event;
 
             switch (e.keyCode) {
-            case 13:
-                if (this.value.trim() === '') {
-                    break;
-                }
+                case 13:
+                    if (this.value.trim() === '') {
+                        break;
+                    }
 
-                cBox._commandHistory.unshift(this.value);
-                cBox._tempCommand = '';
-                cBox._currentCommand = -1;
-                cBox.command(this.value);
-                this.value = '';
-                e.stopImmediatePropagation();
-                break;
-            case 38:
-                var previousCommand = cBox._commandHistory[cBox._currentCommand + 1];
-                if (cBox._currentCommand === -1) {
-                    cBox._tempCommand = this.value;
-                }
-
-                if (typeof previousCommand === 'string') {
-                    cBox._currentCommand += 1;
-                    this.value = previousCommand;
-                    this.value = this.value; // set cursor to end
-                }
-                e.stopImmediatePropagation();
-                break;
-            case 40:
-                var nextCommand = cBox._commandHistory[cBox._currentCommand - 1];
-                if (typeof nextCommand === 'string') {
-                    cBox._currentCommand -= 1;
-                    this.value = nextCommand;
-                    this.value = this.value; // set cursor to end
-                } else {
+                    cBox._commandHistory.unshift(this.value);
+                    cBox._tempCommand = '';
                     cBox._currentCommand = -1;
-                    this.value = cBox._tempCommand;
-                    this.value = this.value; // set cursor to end
-                }
-                e.stopImmediatePropagation();
-                break;
+                    cBox.command(this.value);
+                    this.value = '';
+                    e.stopImmediatePropagation();
+                    break;
+                case 38:
+                    var previousCommand = cBox._commandHistory[cBox._currentCommand + 1];
+                    if (cBox._currentCommand === -1) {
+                        cBox._tempCommand = this.value;
+                    }
+
+                    if (typeof previousCommand === 'string') {
+                        cBox._currentCommand += 1;
+                        this.value = previousCommand;
+                        this.value = this.value; // set cursor to end
+                    }
+                    e.stopImmediatePropagation();
+                    break;
+                case 40:
+                    var nextCommand = cBox._commandHistory[cBox._currentCommand - 1];
+                    if (typeof nextCommand === 'string') {
+                        cBox._currentCommand -= 1;
+                        this.value = nextCommand;
+                        this.value = this.value; // set cursor to end
+                    } else {
+                        cBox._currentCommand = -1;
+                        this.value = cBox._tempCommand;
+                        this.value = this.value; // set cursor to end
+                    }
+                    e.stopImmediatePropagation();
+                    break;
             }
         });
 
@@ -128,7 +128,7 @@ ControlBox.prototype = {
                 this.error();
             }
         } catch (ex) {
-            var msg = (ex && ex.message) ? ex.message: null;
+            var msg = (ex && ex.message) ? ex.message : null;
             this.error(msg);
         }
     },
@@ -151,7 +151,7 @@ ControlBox.prototype = {
             switch (arg) {
                 case '-m':
                     var message = args.join(" ");
-                    this.historyView.commit({},message);
+                    this.historyView.commit({}, message);
                     break;
                 default:
                     this.historyView.commit();
@@ -177,32 +177,32 @@ ControlBox.prototype = {
             var arg = args.shift();
 
             switch (arg) {
-            case '--remote':
-            case '-r':
-                this.info(
-                    'This command normally displays all of your remote tracking branches.'
-                );
-                args.length = 0;
-                break;
-            case '--all':
-            case '-a':
-                this.info(
-                    'This command normally displays all of your tracking branches, both remote and local.'
-                );
-                break;
-            case '--delete':
-            case '-d':
-                var name = args.pop();
-                this.historyView.deleteBranch(name);
-                break;
-            default:
-                if (arg.charAt(0) === '-') {
-                    this.error();
-                } else {
-                    var remainingArgs = [arg].concat(args);
+                case '--remote':
+                case '-r':
+                    this.info(
+                        'This command normally displays all of your remote tracking branches.'
+                    );
                     args.length = 0;
-                    this.historyView.branch(remainingArgs.join(' '));
-                }
+                    break;
+                case '--all':
+                case '-a':
+                    this.info(
+                        'This command normally displays all of your tracking branches, both remote and local.'
+                    );
+                    break;
+                case '--delete':
+                case '-d':
+                    var name = args.pop();
+                    this.historyView.deleteBranch(name);
+                    break;
+                default:
+                    if (arg.charAt(0) === '-') {
+                        this.error();
+                    } else {
+                        var remainingArgs = [arg].concat(args);
+                        args.length = 0;
+                        this.historyView.branch(remainingArgs.join(' '));
+                    }
             }
         }
     },
@@ -217,23 +217,23 @@ ControlBox.prototype = {
             var arg = args.shift();
 
             switch (arg) {
-            case '-c':
-                var name = args[args.length - 1];
-                try {
-                    this.historyView.branch(name);
-                    this.historyView.checkout(name);
-                } catch (err) {
-                    if (err.message.indexOf('already exists') === -1) {
-                        throw new Error(err.message);
-                    } else {
+                case '-c':
+                    var name = args[args.length - 1];
+                    try {
+                        this.historyView.branch(name);
                         this.historyView.checkout(name);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        } else {
+                            this.historyView.checkout(name);
+                        }
                     }
-                }
-                break;
-            default:
-                var remainingArgs = [arg].concat(args);
-                args.length = 0;
-                this.historyView.checkout(remainingArgs.join(' '));
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.historyView.checkout(remainingArgs.join(' '));
             }
         }
     },
@@ -243,20 +243,20 @@ ControlBox.prototype = {
             var arg = args.shift();
 
             switch (arg) {
-            case '-b':
-                var name = args[args.length - 1];
-                try {
-                    this.historyView.branch(name);
-                } catch (err) {
-                    if (err.message.indexOf('already exists') === -1) {
-                        throw new Error(err.message);
+                case '-b':
+                    var name = args[args.length - 1];
+                    try {
+                        this.historyView.branch(name);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        }
                     }
-                }
-                break;
-            default:
-                var remainingArgs = [arg].concat(args);
-                args.length = 0;
-                this.historyView.checkout(remainingArgs.join(' '));
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.historyView.checkout(remainingArgs.join(' '));
             }
         }
     },
@@ -271,7 +271,7 @@ ControlBox.prototype = {
 
             return;
         }
-        
+
         while (args.length > 0) {
             var arg = args.shift();
 
@@ -290,28 +290,28 @@ ControlBox.prototype = {
             var arg = args.shift();
 
             switch (arg) {
-            case '--soft':
-                this.info(
-                    'The "--soft" flag works in real git, but ' +
-                    'I am unable to show you how it works in this demo. ' +
-                    'So I am just going to show you what "--hard" looks like instead.'
-                );
-                break;
-            case '--mixed':
-                this.info(
-                    'The "--mixed" flag works in real git, but ' +
-                    'I am unable to show you how it works in this demo.'
-                );
-                break;
-            case '--hard':
-                this.historyView.reset(args.join(' '));
-                args.length = 0;
-                break;
-            default:
-                var remainingArgs = [arg].concat(args);
-                args.length = 0;
-                this.info('Assuming "--hard".');
-                this.historyView.reset(remainingArgs.join(' '));
+                case '--soft':
+                    this.info(
+                        'The "--soft" flag works in real git, but ' +
+                        'I am unable to show you how it works in this demo. ' +
+                        'So I am just going to show you what "--hard" looks like instead.'
+                    );
+                    break;
+                case '--mixed':
+                    this.info(
+                        'The "--mixed" flag works in real git, but ' +
+                        'I am unable to show you how it works in this demo.'
+                    );
+                    break;
+                case '--hard':
+                    this.historyView.reset(args.join(' '));
+                    args.length = 0;
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.info('Assuming "--hard".');
+                    this.historyView.reset(remainingArgs.join(' '));
             }
         }
     },
@@ -327,8 +327,7 @@ ControlBox.prototype = {
     merge: function (args) {
         var noFF = false;
         var branch = args[0];
-        if (args.length === 2)
-        {
+        if (args.length === 2) {
             if (args[0] === '--no-ff') {
                 noFF = true;
                 branch = args[1];
