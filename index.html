@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/2.1.0/normalize.css">
 
   <!-- Local version also available for offline use -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+
+  <!-- Local version also available for offline use -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/1140/2.0/1140.css">
   <link rel="stylesheet" href="css/explaingit.css">
   <!-- XTerm -->
@@ -84,99 +87,6 @@
 
     <!-- TERMINAL & PLAYGROUND -->
     <div class="row concept-area">
-
-      <!-- BASIC COMMANDS -->
-      <div id="ExplainGitCommit-Container" class="twelvecol concept-container">
-        <p>
-          We are going to skip instructing you on how to add your files for commit in this explanation.
-          Let's assume you already know how to do that. If you don't, go read some other tutorials.
-        </p>
-        <p>
-          Pretend that you already have your files staged for commit and enter <span class="cmd">git commit</span>
-          as many times as you like in the terminal box.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitBranch-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git branch name</span> will create a new branch named "name".
-          Creating branches just creates a new tag pointing to the currently checked out commit.
-        </p>
-        <p>
-          Branches can be deleted using the command <span class="cmd">git branch -d name</span>.
-        </p>
-        <p>
-          Type <span class="cmd">git commit</span> and <span class="cmd">git branch</span> commands
-          to your hearts desire until you understand this concept.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitCheckout-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git checkout</span> has many uses,
-          but the main one is to switch between branches.</br>
-          For example, to switch from master branch to dev branch,
-          I would type <span class="cmd">git checkout dev</span>.
-          After that, if I do a git commit, notice where it goes. Try it.
-        </p>
-        <p>
-          In addition to checking out branches, you can also checkout individual commits. Try it.</br>
-          Make a new commit and then type <span class="cmd">git checkout bb92e0e</span>
-          and see what happens.
-        </p>
-        <p>
-          Type <span class="cmd">git commit</span>, <span class="cmd">git branch</span>,
-          and <span class="cmd">git checkout</span> commands to your hearts desire
-          until you understand this concept.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitCheckout-b-Container" class="twelvecol concept-container">
-        <p>
-          You can combine <span class="cmd">git branch</span> and <span class="cmd">git checkout</span>
-          into a single command by typing <span class="cmd">git checkout -b branchname</span>.
-          This will create the branch if it does not already exist and immediately check it out.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-
-      <!-- UNDO COMMITS -->
-      <div id="ExplainGitReset-Container" class="twelvecol concept-container">
-        <p>
-          <span class="cmd">git reset</span> will move HEAD and the current branch back to wherever
-          you specify, abandoning any commits that may be left behind. This is useful to undo a commit
-          that you no longer need.
-        </p>
-        <p>
-          This command is normally used with one of three flags: "--soft", "--mixed", and "--hard".
-          The soft and mixed flags deal with what to do with the work that was inside the commit after
-          you reset, and you can read about it <a
-            href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified">here</a>.
-          Since this visualization cannot graphically display that work, only the "--hard" flag will work
-          on this site.
-        </p>
-        <p>
-          The ref "HEAD^" is usually used together with this command. "HEAD^" means "the commit right
-          before HEAD. "HEAD^^" means "two commits before HEAD", and so on.
-        </p>
-        <p>
-          Note that you must <b>never</b> use <span class="cmd">git reset</span> to abandon commits
-          that have already been pushed and merged into the origin. This can cause your local repository
-          to become out of sync with the origin. Don't do it unless you really know what you're doing.
-        </p>
-        <div class="playground-container"></div>
-      </div>
-      <div id="ExplainGitRevert-Container" class="twelvecol concept-container">
-        <p>
-          To undo commits that have already been pushed and shared with the team, we cannot use the
-          <span class="cmd">git reset</span> command. Instead, we have to use <span class="cmd">git revert</span>.
-        </p>
-        <p>
-          <span class="cmd">git revert</span> will create a new commit that will undo all of the work that
-          was done in the commit you want to revert.
-        </p>
-        <div class="playground-container"></div>
-      </div>
 
       <!-- COMBINE BRANCHES -->
       <div id="ExplainGitMerge-Container" class="twelvecol concept-container">

@@ -303,6 +303,7 @@ ControlBox.prototype = {
         }
     },
 
+    // TODO: Support for HEAD^2, HEAD~3, etc.
     reset: function (args) {
         while (args.length > 0) {
             var arg = args.shift();

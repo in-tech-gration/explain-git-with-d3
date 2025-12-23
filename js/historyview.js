@@ -1062,5 +1062,4 @@ HistoryView.prototype = {
     }
 };
 
-// return HistoryView;
 window.HistoryView = HistoryView;

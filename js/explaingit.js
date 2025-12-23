@@ -1,16 +1,30 @@
 // define(['historyview', 'controlbox', 'd3'], function (HistoryView, ControlBox, d3) { /* MOVED OUTSIDE */});
 
-var prefix = 'ExplainGit',
-    openSandBoxes = [],
-    open,
-    reset,
-    explainGit;
+var prefix = 'ExplainGit';
+var openSandBoxes = [];
+var explainGit;
 
-open = function (_args) {
+function renderContainer(mdContent, containerId) {
+    const div = document.createElement('div');
+    div.id = containerId;
+    div.className = 'twelvecol concept-container';
+    const contentHTML = marked.parse(mdContent)
+    div.innerHTML = contentHTML;
+    div.innerHTML += `<div class="playground-container"></div>`;
+    const parent = document.querySelector('.concept-area');
+    parent.appendChild(div);
+}
+
+var open = function (_args) {
 
     let args = Object.create(_args);
     let name = prefix + args.name;
     let containerId = name + '-Container';
+    let content = _args.content || '';
+
+    // Create Container Element:
+    renderContainer(content, containerId);
+
     let container = d3.select('#' + containerId);
     let playground = container.select('.playground-container');
     // let playground = d3.select('#playground-container'),
@@ -51,7 +65,7 @@ open = function (_args) {
     });
 };
 
-reset = function () {
+var reset = function () {
     for (var i = 0; i < openSandBoxes.length; i++) {
         var osb = openSandBoxes[i];
         osb.hv.destroy();
@@ -63,12 +77,10 @@ reset = function () {
     d3.selectAll('a.openswitch').classed('selected', false);
 };
 
-explainGit = {
+window.explainGit = {
     HistoryView,
     ControlBox,
     generateId: HistoryView.generateId,
     open,
     reset,
 };
-
-window.explainGit = explainGit;
