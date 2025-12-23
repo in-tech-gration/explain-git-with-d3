@@ -1,6 +1,6 @@
 // require(['explaingit'], function (explainGit) { /* MOVED OUTSIDE */});
 
-var examples = {
+const examples = {
     'commit': {
         name: 'Commit',
         height: 200,
@@ -217,20 +217,24 @@ window.addEventListener('hashchange', open, false);
 window.addEventListener('load', open, false);
 
 function open() {
-    var hash = window.location.hash.substr(1),
+
+    let hash = window.location.hash.substr(1),
         linkId = 'open-' + hash,
         example = examples[hash];
 
     if (example) {
+
         explainGit.reset();
         document.getElementById(linkId).classList.add('selected');
         explainGit.open(example);
-    } else if (hash === 'zen') {
-        var elements = document.getElementsByClassName('row');
+        return;
+    }
+
+    if (hash === 'zen') {
+        const elements = document.getElementsByClassName('row');
         for (var i = 0; i != elements.length; ++i) {
             elements[i].style.display = 'none';
         }
-        document.getElementById('fork-me').style.display = 'none';
 
         explainGit.reset();
 

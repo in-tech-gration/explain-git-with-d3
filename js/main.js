@@ -43,13 +43,14 @@ if (!Array.prototype.indexOf) {
     }
 }
 
-require.config({
-    paths: {
-        'd3': 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min'
-    },
-    shim: {
-        'd3': {
-            exports: 'd3'
-        }
-    }
-});
+// require.config({
+//     paths: {
+//         'd3': 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min'
+//     },
+//     shim: {
+//         'd3': {
+//             exports: 'd3'
+//         }
+//     }
+// });
+alert();

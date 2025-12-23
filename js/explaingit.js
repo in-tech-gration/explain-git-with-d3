@@ -62,13 +62,11 @@ reset = function () {
 };
 
 explainGit = {
-    HistoryView: HistoryView,
-    ControlBox: ControlBox,
+    HistoryView,
+    ControlBox,
     generateId: HistoryView.generateId,
-    open: open,
-    reset: reset
+    open,
+    reset,
 };
 
 window.explainGit = explainGit;
-
-// return explainGit;
