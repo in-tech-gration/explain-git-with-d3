@@ -51,7 +51,7 @@ XTermControlBox.prototype = {
     },
 
     clear: function () {
-        // console.log(this.term.buffer);
+        console.log(this.term.buffer);
         this.term.reset();
         this.term.write(`$ `);
     },
@@ -70,6 +70,10 @@ XTermControlBox.prototype = {
 
         if (entry.trim === '') {
             return;
+        }
+
+        if (entry === "clear") {
+            return this.clear();
         }
 
         var split = entry.split(' ');
@@ -102,7 +106,6 @@ XTermControlBox.prototype = {
     git_commit: function (args) {
 
         this.term.write(`\x1B[90m\r\n[commit]\x1B[0m`);
-        this.term.write('\r\n$ ');
 
         if (args.length >= 2) {
             var arg = args.shift();
@@ -119,6 +122,9 @@ XTermControlBox.prototype = {
         } else {
             this.historyView.commit();
         }
+
+        this.term.write('\r\n$ ');
+
     },
 
     git_fetch: function () {
@@ -208,8 +214,8 @@ XTermControlBox.prototype = {
                     this.historyView.checkout(remainingArgs.join(' '));
             }
 
-            this.term.write('\r\n$ ');
         }
+        this.term.write('\r\n$ ');
     },
 
     git_pull: function (args) {
@@ -341,6 +347,150 @@ XTermControlBox.prototype = {
             this.info('Fast-forwarded to ' + ref + '.');
         }
 
+        this.term.write('\r\n$ ');
+    },
+
+    git_tag: function (args) {
+
+        if (args.length < 1) {
+            this.info(
+                'You need to give a tag name. ' +
+                'Normally if you don\'t give a name, ' +
+                'this command will list your local tags on the screen.'
+            );
+
+            return;
+        }
+
+        arg_loop: while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case "-d":
+                    const name = args[args.length - 1];
+                    this.info(`git tag -d ${name} coming soon...`);
+                    break arg_loop;
+
+                default:
+                    try {
+                        this.historyView.tag(arg);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        }
+                    }
+                    break;
+            }
+
+        }
+
+        this.term.write('\r\n$ ');
+    },
+
+    git_branch: function (args) {
+
+        if (args.length < 1) {
+            this.info(
+                'You need to give a branch name. ' +
+                'Normally if you don\'t give a name, ' +
+                'this command will list your local branches on the screen.'
+            );
+
+            return;
+        }
+
+        while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case '--remote':
+                case '-r':
+                    this.info(
+                        'This command normally displays all of your remote tracking branches.'
+                    );
+                    args.length = 0;
+                    break;
+                case '--all':
+                case '-a':
+                    this.info(
+                        'This command normally displays all of your tracking branches, both remote and local.'
+                    );
+                    break;
+                case '--delete':
+                case '-d':
+                    var name = args.pop();
+                    this.historyView.deleteBranch(name);
+                    break;
+                default:
+                    if (arg.charAt(0) === '-') {
+                        this.error();
+                    } else {
+                        var remainingArgs = [arg].concat(args);
+                        args.length = 0;
+                        this.historyView.branch(remainingArgs.join(' '));
+                    }
+            }
+        }
+
+        this.term.write('\r\n$ ');
+    },
+
+    git_merge: function (args) {
+        var noFF = false;
+        var branch = args[0];
+        if (args.length === 2) {
+            if (args[0] === '--no-ff') {
+                noFF = true;
+                branch = args[1];
+            } else if (args[1] === '--no-ff') {
+                noFF = true;
+                branch = args[0];
+            } else {
+                this.info('This demo only supports the --no-ff switch..');
+            }
+        }
+        var result = this.historyView.merge(branch, noFF);
+
+        if (result === 'Fast-Forward') {
+            this.info('You have performed a fast-forward merge.');
+        }
+        this.term.write('\r\n$ ');
+    },
+
+    // TODO: Support for HEAD^2, HEAD~3, etc.
+    git_reset: function (args) {
+        while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case '--soft':
+                    this.info(
+                        'The "--soft" flag works in real git, but ' +
+                        'I am unable to show you how it works in this demo. ' +
+                        'So I am just going to show you what "--hard" looks like instead.'
+                    );
+                    break;
+                case '--mixed':
+                    this.info(
+                        'The "--mixed" flag works in real git, but ' +
+                        'I am unable to show you how it works in this demo.'
+                    );
+                    break;
+                case '--hard':
+                    this.historyView.reset(args.join(' '));
+                    args.length = 0;
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.info('Assuming "--hard".');
+                    this.historyView.reset(remainingArgs.join(' '));
+            }
+        }
+    },
+
+    git_revert: function (args) {
+        this.historyView.revert(args.shift());
         this.term.write('\r\n$ ');
     },
 
@@ -522,6 +672,7 @@ ControlBox.prototype = {
         }
     },
 
+    // 🚧
     branch: function (args) {
         if (args.length < 1) {
             this.info(
@@ -628,6 +779,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     tag: function (args) {
         if (args.length < 1) {
             this.info(
@@ -696,14 +848,15 @@ ControlBox.prototype = {
         }
     },
 
-    clean: function (args) {
-        this.info('Deleting all of your untracked files...');
-    },
-
     revert: function (args) {
         this.historyView.revert(args.shift());
     },
 
+    clean: function (args) {
+        this.info('Deleting all of your untracked files...');
+    },
+
+    // ✅
     merge: function (args) {
         var noFF = false;
         var branch = args[0];
