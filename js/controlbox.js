@@ -4,6 +4,9 @@ function XTermControlBox(config) {
     this.historyView = config.historyView;
     this.originView = config.originView;
     this.initialMessage = config.initialMessage || 'Enter git commands below.';
+    this._commandHistory = [];
+    this._currentCommand = -1;
+    this._tempCommand = '';
     this.rebaseConfig = {};
     this.term = new Terminal({
         cols: 80,
@@ -34,6 +37,44 @@ XTermControlBox.prototype = {
             const char = e.key;
             const code = e.domEvent.keyCode;
             const promptLength = 2; // Length of the prompt "$ "
+
+            // Prevent default behavior for up and down arrows
+            if (code === 38 || code === 40) {
+
+                if (code === 38) {
+                    var previousCommand = this._commandHistory[this._currentCommand + 1];
+                    if (this._currentCommand === -1) {
+                        this._tempCommand = this.value;
+                    }
+
+                    if (typeof previousCommand === 'string') {
+                        this._currentCommand += 1;
+                        this.value = previousCommand;
+                        this.value = this.value; // set cursor to end
+                    }
+                    // TODO: FIX
+                    this.term.write(previousCommand);
+                }
+
+                if (code === 40) {
+
+                    var nextCommand = this._commandHistory[this._currentCommand - 1];
+                    if (typeof nextCommand === 'string') {
+                        this._currentCommand -= 1;
+                        this.value = nextCommand;
+                        this.value = this.value; // set cursor to end
+                    } else {
+                        this._currentCommand = -1;
+                        this.value = this._tempCommand;
+                        this.value = this.value; // set cursor to end
+                    }
+                    // TODO: FIX
+                    this.term.write(nextCommand);
+                }
+
+                e.domEvent.preventDefault();
+                return;
+            }
 
             if (code === 13) { // Enter
                 const buffer = this.term.buffer.active.getLine(this.term.buffer.active.cursorY).translateToString(true).slice(promptLength);
@@ -68,9 +109,14 @@ XTermControlBox.prototype = {
     command: function (entry) {
         console.log("XTerm command()", entry);
 
-        if (entry.trim === '') {
+        if (entry.trim() === '') {
             return;
         }
+
+        this._commandHistory.unshift(entry.trim());
+        this._tempCommand = '';
+        this._currentCommand = -1;
+        console.log(this._commandHistory);
 
         if (entry === "clear") {
             return this.clear();
@@ -659,6 +705,7 @@ ControlBox.prototype = {
         log.scrollTop = log.scrollHeight;
     },
 
+    // ✅
     command: function (entry) {
         console.log("command()", entry);
 
@@ -693,6 +740,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     info: function (msg) {
         this.log.append('div').classed('info', true).html(msg);
         this._scrollToBottom();
