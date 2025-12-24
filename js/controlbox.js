@@ -5,7 +5,12 @@ function XTermControlBox(config) {
     this.originView = config.originView;
     this.initialMessage = config.initialMessage || 'Enter git commands below.';
     this.rebaseConfig = {};
-    this.term = new Terminal();
+    this.term = new Terminal({
+        cols: 80,
+        rows: 14,
+        cursorBlink: true,
+        scrollback: 1000,
+    });
 }
 
 XTermControlBox.prototype = {
@@ -240,6 +245,103 @@ XTermControlBox.prototype = {
                 control.info('Fast-forwarded to ' + rtBranch + '.');
             }
         }, 750);
+    },
+
+    git_push: function (args) {
+        var control = this,
+            local = this.historyView,
+            remoteName = args.shift() || 'origin',
+            remote = this[remoteName + 'View'],
+            branchArgs = args.pop(),
+            localRef = local.currentBranch,
+            remoteRef = local.currentBranch,
+            localCommit, remoteCommit,
+            findCommitsToPush,
+            isCommonCommit,
+            toPush = [];
+
+        if (remoteName === 'history') {
+            throw new Error('Sorry, you can\'t have a remote named "history" in this example.');
+        }
+
+        if (!remote) {
+            throw new Error('There is no remote server named "' + remoteName + '".');
+        }
+
+        if (branchArgs) {
+            branchArgs = /^([^:]*)(:?)(.*)$/.exec(branchArgs);
+
+            branchArgs[1] && (localRef = branchArgs[1]);
+            branchArgs[2] === ':' && (remoteRef = branchArgs[3]);
+        }
+
+        if (local.branches.indexOf(localRef) === -1) {
+            throw new Error('Local ref: ' + localRef + ' does not exist.');
+        }
+
+        if (!remoteRef) {
+            throw new Error('No remote branch was specified to push to.');
+        }
+
+        localCommit = local.getCommit(localRef);
+        remoteCommit = remote.getCommit(remoteRef);
+
+        findCommitsToPush = function findCommitsToPush(localCommit) {
+            var commitToPush,
+                isCommonCommit = remote.getCommit(localCommit.id) !== null;
+
+            while (!isCommonCommit) {
+                commitToPush = {
+                    id: localCommit.id,
+                    parent: localCommit.parent,
+                    tags: []
+                };
+
+                if (typeof localCommit.parent2 === 'string') {
+                    commitToPush.parent2 = localCommit.parent2;
+                    findCommitsToPush(local.getCommit(localCommit.parent2));
+                }
+
+                toPush.unshift(commitToPush);
+                localCommit = local.getCommit(localCommit.parent);
+                isCommonCommit = remote.getCommit(localCommit.id) !== null;
+            }
+        };
+
+        // push to an existing branch on the remote
+        if (remoteCommit && remote.branches.indexOf(remoteRef) > -1) {
+            if (!local.isAncestor(remoteCommit.id, localCommit.id)) {
+                throw new Error('Push rejected. Non fast-forward.');
+            }
+
+            isCommonCommit = localCommit.id === remoteCommit.id;
+
+            if (isCommonCommit) {
+                return this.info('Everything up-to-date.');
+            }
+
+            findCommitsToPush(localCommit);
+
+            remote.commitData = remote.commitData.concat(toPush);
+            remote.moveTag(remoteRef, toPush[toPush.length - 1].id);
+            remote.renderCommits();
+        } else {
+            this.info('Sorry, creating new remote branches is not supported yet.');
+        }
+
+        this.term.write('\r\n$ ');
+    },
+
+    git_rebase: function (args) {
+
+        const ref = args.shift();
+        const result = this.historyView.rebase(ref);
+
+        if (result === 'Fast-Forward') {
+            this.info('Fast-forwarded to ' + ref + '.');
+        }
+
+        this.term.write('\r\n$ ');
     },
 
     info: function (msg) {
@@ -623,6 +725,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     rebase: function (args) {
         var ref = args.shift(),
             result = this.historyView.rebase(ref);
@@ -698,7 +801,7 @@ ControlBox.prototype = {
         local.renderCommits();
     },
 
-    // 🚧
+    // ✅
     pull: function (args) {
         var control = this,
             local = this.historyView,
@@ -733,6 +836,7 @@ ControlBox.prototype = {
         }, 750);
     },
 
+    // ✅
     push: function (args) {
         var control = this,
             local = this.historyView,
