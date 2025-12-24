@@ -1,6 +1,7 @@
 "use strict";
 
 function XTermControlBox(config) {
+    
     this.historyView = config.historyView;
     this.originView = config.originView;
     this.initialMessage = config.initialMessage || 'Enter git commands below.';

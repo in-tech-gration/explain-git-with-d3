@@ -223,10 +223,11 @@ tagY = function tagY(t, view) {
  * @constructor
  */
 function HistoryView(config) {
-    var commitData = config.commitData || [],
-        commit;
 
-    for (var i = 0; i < commitData.length; i++) {
+    let commitData = config.commitData || [];
+    let commit;
+
+    for (let i = 0; i < commitData.length; i++) {
         commit = commitData[i];
         !commit.parent && (commit.parent = 'initial');
         !commit.tags && (commit.tags = []);
@@ -236,7 +237,7 @@ function HistoryView(config) {
     this.commitData = commitData;
 
     this.branches = [];
-    this.currentBranch = config.currentBranch || 'master';
+    this.currentBranch = config.currentBranch || 'main';
 
     this.width = config.width;
     this.height = config.height || 400;

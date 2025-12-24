@@ -6,7 +6,7 @@ const examples = {
         height: 200,
         baseLine: 0.4,
         commitData: [
-            { id: 'e137e9b', tags: ['master'] }
+            { id: 'e137e9b', tags: ['main'] }
         ],
         initialMessage: 'Type git commit a few times.',
         content: `<p>
@@ -16,7 +16,7 @@ const examples = {
         name: 'Branch',
         baseLine: 0.6,
         commitData: [
-            { id: 'e137e9b', tags: ['master'] }
+            { id: 'e137e9b', tags: ['main'] }
         ],
         content: `<p>
           <span class="cmd">git branch name</span> will create a new branch named "name".
@@ -36,7 +36,7 @@ const examples = {
         height: 500,
         commitData: [
             { id: 'e137e9b' },
-            { id: 'bb92e0e', parent: 'e137e9b', tags: ['master'] },
+            { id: 'bb92e0e', parent: 'e137e9b', tags: ['main'] },
             { id: 'e088135', parent: 'e137e9b', tags: ['dev'] }
         ],
         initialMessage:
@@ -44,7 +44,7 @@ const examples = {
         content: `<p>
           <span class="cmd">git checkout</span> has many uses,
           but the main one is to switch between branches.</br>
-          For example, to switch from master branch to dev branch,
+          For example, to switch from main branch to dev branch,
           I would type <span class="cmd">git checkout dev</span>.
           After that, if I do a git commit, notice where it goes. Try it.
         </p>
@@ -65,7 +65,7 @@ const examples = {
         commitData: [
             { id: 'e137e9b' },
             { id: 'f5b32c8', parent: 'e137e9b' },
-            { id: 'bb92e0e', parent: 'f5b32c8', tags: ['master'] },
+            { id: 'bb92e0e', parent: 'f5b32c8', tags: ['main'] },
             { id: 'e088135', parent: 'e137e9b', tags: ['dev'] }
         ],
         initialMessage:
@@ -85,7 +85,7 @@ const examples = {
         commitData: [
             { id: 'e137e9b' },
             { id: '0e70093', parent: 'e137e9b' },
-            { id: '3e33afd', parent: '0e70093', tags: ['master'] }
+            { id: '3e33afd', parent: '0e70093', tags: ['main'] }
         ],
         initialMessage: 'Type "git reset HEAD^".',
         content: `<p>
@@ -119,7 +119,7 @@ const examples = {
         commitData: [
             { id: 'e137e9b' },
             { id: '0e70093', parent: 'e137e9b' },
-            { id: '3e33afd', parent: '0e70093', tags: ['master'] }
+            { id: '3e33afd', parent: '0e70093', tags: ['main'] }
         ],
         initialMessage: 'Type "git revert 0e70093".',
         content: `<p>
@@ -144,7 +144,7 @@ const examples = {
         height: 500,
         commitData: [
             { id: 'e137e9b' },
-            { id: 'bb92e0e', parent: 'e137e9b', tags: ['master'] },
+            { id: 'bb92e0e', parent: 'e137e9b', tags: ['main'] },
             { id: 'f5b32c8', parent: 'e137e9b', tags: ['ff'] },
             { id: 'e088135', parent: 'f5b32c8', tags: ['dev'] }
         ],
@@ -164,13 +164,13 @@ const examples = {
         height: 500,
         commitData: [
             { id: 'e137e9b' },
-            { id: 'bb92e0e', parent: 'e137e9b', tags: ['master'] },
+            { id: 'bb92e0e', parent: 'e137e9b', tags: ['main'] },
             { id: 'f5b32c8', parent: 'e137e9b' },
             { id: 'e088135', parent: 'f5b32c8', tags: ['dev'] }
         ],
         currentBranch: 'dev',
         initialMessage:
-            'Type "git rebase master".',
+            'Type "git rebase main".',
         content: `<p>
           <span class="cmd">git rebase</span> will take the commits on this branch and "move" them so that their
           new "base" is at the point you specify.
@@ -191,9 +191,9 @@ const examples = {
         name: 'Fetch',
         height: 500,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master'] },
+            { id: 'e137e9b', tags: ['origin/main'] },
             { id: '6ce726f', parent: 'e137e9b' },
-            { id: 'bb92e0e', parent: '6ce726f', tags: ['master'] },
+            { id: 'bb92e0e', parent: '6ce726f', tags: ['main'] },
             { id: '0cff760', parent: 'e137e9b', tags: ['origin/dev'] },
             { id: '4ed301d', parent: '0cff760', tags: ['dev'] }
         ],
@@ -201,7 +201,7 @@ const examples = {
             { id: 'e137e9b' },
             { id: '7eb7654', parent: 'e137e9b' },
             { id: '090e2b8', parent: '7eb7654' },
-            { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] },
+            { id: 'ee5df4b', parent: '090e2b8', tags: ['main'] },
             { id: '0cff760', parent: 'e137e9b' },
             { id: '2f8d946', parent: '0cff760' },
             { id: '29235ca', parent: '2f8d946', tags: ['dev'] }
@@ -218,14 +218,14 @@ const examples = {
         name: 'Pull',
         height: 500,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master'] },
-            { id: '46d095b', parent: 'e137e9b', tags: ['master'] }
+            { id: 'e137e9b', tags: ['origin/main'] },
+            { id: '46d095b', parent: 'e137e9b', tags: ['main'] }
         ],
         originData: [
             { id: 'e137e9b' },
             { id: '7eb7654', parent: 'e137e9b' },
             { id: '090e2b8', parent: '7eb7654' },
-            { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] }
+            { id: 'ee5df4b', parent: '090e2b8', tags: ['main'] }
         ],
         initialMessage:
             'Carefully compare the commit IDs between the origin and the local repository. ' +
@@ -248,12 +248,12 @@ const examples = {
         name: 'Push',
         height: 500,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master'] },
-            { id: '46d095b', parent: 'e137e9b', tags: ['master'] }
+            { id: 'e137e9b', tags: ['origin/main'] },
+            { id: '46d095b', parent: 'e137e9b', tags: ['main'] }
         ],
         originData: [
             { id: 'e137e9b' },
-            { id: '7eb7654', parent: 'e137e9b', tags: ['master'] }
+            { id: '7eb7654', parent: 'e137e9b', tags: ['main'] }
         ],
         initialMessage:
             'Carefully compare the commit IDs between the origin and the local repository. ' +
@@ -275,7 +275,7 @@ const examples = {
         name: 'Tag',
         baseLine: 0.6,
         commitData: [
-            { id: 'e137e9b', tags: ['master'] }
+            { id: 'e137e9b', tags: ['main'] }
         ],
         content: `<p>
           <span class="cmd">git tag name</span> will create a new tag named "name".
@@ -296,16 +296,16 @@ const examples = {
         height: 200,
         baseLine: 0.4,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master'] },
+            { id: 'e137e9b', tags: ['origin/main'] },
             { id: '0e70093', parent: 'e137e9b' },
-            { id: '3e33afd', parent: '0e70093', tags: ['master'] }
+            { id: '3e33afd', parent: '0e70093', tags: ['main'] }
         ],
-        initialMessage: 'Type "git reset origin/master".',
+        initialMessage: 'Type "git reset origin/main".',
         content: `<p>
           One simple example of the use of <span class="cmd">git reset</span> is to completely restore your local
           repository
           state to that of the origin.</br>
-          You can do so by typing <span class="cmd">git reset origin/master</span>.
+          You can do so by typing <span class="cmd">git reset origin/main</span>.
         </p>
         <p>
           Note that this won't delete untracked files, you will have to delete those separately with
@@ -317,7 +317,7 @@ const examples = {
         name: 'FetchRebase',
         height: 500,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master', 'master'] },
+            { id: 'e137e9b', tags: ['origin/main', 'main'] },
             { id: '46d095b', parent: 'e137e9b' },
             { id: 'dccdc4d', parent: '46d095b', tags: ['my-branch'] }
         ],
@@ -326,18 +326,18 @@ const examples = {
             { id: 'e137e9b' },
             { id: '7eb7654', parent: 'e137e9b' },
             { id: '090e2b8', parent: '7eb7654' },
-            { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] }
+            { id: 'ee5df4b', parent: '090e2b8', tags: ['main'] }
         ],
         initialMessage:
-            'First type "git fetch". Then type "git rebase origin/master".',
+            'First type "git fetch". Then type "git rebase origin/main".',
         content: `<p>
           Below is a situation in which you are working in a local branch that is all your own. You want to receive the
           latest code
-          from the origin server's master branch. To update your local branch, you can do it without having to switch
+          from the origin server's main branch. To update your local branch, you can do it without having to switch
           branches!
         </p>
         <p>
-          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/master</span>!
+          First do a <span class="cmd">git fetch</span>, then type <span class="cmd">git rebase origin/main</span>!
         </p>`
     },
     'deletebranches': {
@@ -347,7 +347,7 @@ const examples = {
         commitData: [
             { id: 'e137e9b' },
             { id: 'bb92e0e', parent: 'e137e9b' },
-            { id: 'd25ee9b', parent: 'bb92e0e', tags: ['master'] },
+            { id: 'd25ee9b', parent: 'bb92e0e', tags: ['main'] },
             { id: '071ff28', parent: 'e137e9b', tags: ['protoss'] },
             { id: 'f5b32c8', parent: 'bb92e0e' },
             { id: 'e088135', parent: 'f5b32c8', tags: ['zerg'] },
@@ -367,13 +367,13 @@ const examples = {
         name: 'Free',
         height: 500,
         commitData: [
-            { id: 'e137e9b', tags: ['origin/master', 'master'] }
+            { id: 'e137e9b', tags: ['origin/main', 'main'] }
         ],
         originData: [
             { id: 'e137e9b' },
             { id: '7eb7654', parent: 'e137e9b' },
             { id: '090e2b8', parent: '7eb7654' },
-            { id: 'ee5df4b', parent: '090e2b8', tags: ['master'] }
+            { id: 'ee5df4b', parent: '090e2b8', tags: ['main'] }
         ],
         initialMessage:
             'Have fun.',
@@ -415,7 +415,7 @@ function open() {
             name: 'Zen',
             height: '100%',
             commitData: [
-                { id: 'e137e9b', tags: ['master'], message: 'first commit' }
+                { id: 'e137e9b', tags: ['main'], message: 'first commit' }
             ],
             initialMessage:
                 'Have fun.'
