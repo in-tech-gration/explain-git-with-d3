@@ -76,7 +76,7 @@ XTermControlBox.prototype = {
             return this.clear();
         }
 
-        var split = entry.split(' ');
+        const split = entry.split(' ');
 
         if (split[0] !== 'git') {
             // Error: not a git command
@@ -93,6 +93,19 @@ XTermControlBox.prototype = {
                 this["git_" + method](args);
                 // this.term.write('\r\n$ ');
             } else {
+
+                for (let cmd in this) {
+                    if (cmd.indexOf("git_") === 0) {
+                        const dist = levenshtein(method, cmd.slice(4));
+                        if (dist <= 2) {
+                            this.term.write(`\x1B[90m\r\ngit: '${method}' is not a git command. See 'git --help'.\x1B[0m\r\n`);
+                            this.term.write(`\x1B[90m\r\nThe most similar command is\x1B[0m`);
+                            this.term.write(`\x1B[90m\r\n        ${cmd.slice(4)}\x1B[0m`);
+                            break;
+                        }
+                    }
+                }
+
                 // this.error();
                 this.term.write('\r\n$ ');
             }
