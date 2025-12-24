@@ -494,6 +494,45 @@ XTermControlBox.prototype = {
         this.term.write('\r\n$ ');
     },
 
+    /**
+     * 
+     * @param {*} args 
+     * @description: https://git-scm.com/docs/git-switch
+     * @returns 
+     */
+    git_switch: function (args) {
+
+        if (args.length < 1) {
+            this.info('fatal: missing branch or commit argument');
+            return;
+        }
+        while (args.length > 0) {
+            var arg = args.shift();
+
+            switch (arg) {
+                case '-c':
+                    var name = args[args.length - 1];
+                    try {
+                        this.historyView.branch(name);
+                        this.historyView.checkout(name);
+                    } catch (err) {
+                        if (err.message.indexOf('already exists') === -1) {
+                            throw new Error(err.message);
+                        } else {
+                            this.historyView.checkout(name);
+                        }
+                    }
+                    break;
+                default:
+                    var remainingArgs = [arg].concat(args);
+                    args.length = 0;
+                    this.historyView.checkout(remainingArgs.join(' '));
+            }
+        }
+
+        this.term.write('\r\n$ ');
+    },
+
     info: function (msg) {
         // console.log(msg);
         this.term.write(`\x1B[90m\r\n${msg}\x1B[0m`);
@@ -718,6 +757,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     /**
      * 
      * @param {*} args 
@@ -816,6 +856,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     // TODO: Support for HEAD^2, HEAD~3, etc.
     reset: function (args) {
         while (args.length > 0) {
@@ -848,6 +889,7 @@ ControlBox.prototype = {
         }
     },
 
+    // ✅
     revert: function (args) {
         this.historyView.revert(args.shift());
     },
